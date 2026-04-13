@@ -1,0 +1,290 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  RUNNER
+  ORGANIZER
+}
+
+enum GroupMemberRole {
+  MEMBER
+  ORGANIZER
+}
+
+enum PostVisibility {
+  PUBLIC
+  GROUP
+  PRIVATE
+}
+
+enum ReactionType {
+  LIKE
+  LOVE
+  CLAP
+  FIRE
+}
+
+enum NotificationType {
+  WEEKLY_PROGRESS
+  SOCIAL_ACTIVITY
+  GROUP_INVITE
+  EVENT_UPDATE
+  WEEKLY_REPORT
+  SYSTEM
+}
+
+model User {
+  id                Int                  @id @default(autoincrement())
+  username          String               @unique
+  email             String               @unique
+  passwordHash      String
+  role              UserRole             @default(RUNNER)
+  bio               String?
+  avatarUrl         String?
+  location          String?
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+
+  runs              Run[]
+  createdGroups     Group[]              @relation("GroupCreator")
+  groupMemberships  GroupMember[]
+  createdEvents     GroupEvent[]         @relation("GroupEventCreator")
+  posts             Post[]               @relation("PostAuthor")
+  postReactions     PostReaction[]
+  postComments      PostComment[]
+  weeklyGoals       WeeklyGoal[]
+  notifications     Notification[]
+  routeSuggestions  RouteSuggestion[]    @relation("RouteSuggestionRequestedBy")
+  weeklyReports     WeeklyReport[]
+  refreshTokens     RefreshToken[]
+  eventParticipations EventParticipation[]
+}
+
+model Theme {
+  id          Int          @id @default(autoincrement())
+  name        String       @unique
+  emoji       String?
+  colorHex    String?
+  createdAt   DateTime     @default(now())
+
+  runs        Run[]
+  groupEvents GroupEvent[]
+}
+
+model Run {
+  id                Int                  @id @default(autoincrement())
+  userId            Int
+  startedAt         DateTime
+  endedAt           DateTime
+  distanceKm        Float
+  durationSec       Int
+  avgPace           Float?
+  calories          Int?
+  routeGeojson      Json?
+  photoUrl          String?
+  observations      String?
+  motivationalPhrase String?
+  themeId           Int?
+  weatherData       Json?
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+
+  user              User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  theme             Theme?               @relation(fields: [themeId], references: [id], onDelete: SetNull)
+  posts             Post[]
+  routeSuggestions  RouteSuggestion[]
+  eventParticipation EventParticipation?
+
+  @@index([userId, startedAt])
+  @@index([themeId])
+}
+
+model Group {
+  id          Int          @id @default(autoincrement())
+  name        String
+  description String?
+  createdById Int?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  createdBy   User?        @relation("GroupCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  members     GroupMember[]
+  events      GroupEvent[]
+  posts       Post[]
+
+  @@index([createdById])
+}
+
+model GroupMember {
+  groupId     Int
+  userId      Int
+  role        GroupMemberRole @default(MEMBER)
+  joinedAt    DateTime        @default(now())
+
+  group       Group           @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([groupId, userId])
+  @@index([userId])
+}
+
+model GroupEvent {
+  id          Int          @id @default(autoincrement())
+  groupId     Int
+  title       String
+  description String?
+  eventDate   DateTime
+  routeGeojson Json?
+  themeId     Int?
+  createdById Int?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  group       Group        @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  theme       Theme?       @relation(fields: [themeId], references: [id], onDelete: SetNull)
+  createdBy   User?        @relation("GroupEventCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  participations EventParticipation[]
+  posts       Post[]
+
+  @@index([groupId, eventDate])
+  @@index([themeId])
+  @@index([createdById])
+}
+
+model EventParticipation {
+  eventId      Int
+  userId       Int
+  runId        Int?         @unique
+  confirmedAt  DateTime?
+
+  event        GroupEvent   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  run          Run?         @relation(fields: [runId], references: [id], onDelete: SetNull)
+
+  @@id([eventId, userId])
+  @@index([userId])
+}
+
+model Post {
+  id           Int            @id @default(autoincrement())
+  authorId     Int?
+  runId        Int?
+  eventId      Int?
+  groupId      Int?
+  content      String?
+  visibility   PostVisibility @default(PUBLIC)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  author       User?          @relation("PostAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+  run          Run?           @relation(fields: [runId], references: [id], onDelete: SetNull)
+  event        GroupEvent?    @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  group        Group?         @relation(fields: [groupId], references: [id], onDelete: SetNull)
+  reactions    PostReaction[]
+  comments     PostComment[]
+
+  @@index([authorId, createdAt])
+  @@index([runId])
+  @@index([eventId])
+  @@index([groupId])
+}
+
+model PostReaction {
+  postId      Int
+  userId      Int
+  type        ReactionType @default(LIKE)
+  createdAt   DateTime     @default(now())
+
+  post        Post         @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([postId, userId])
+  @@index([userId])
+}
+
+model PostComment {
+  id          Int          @id @default(autoincrement())
+  postId      Int
+  userId      Int
+  content     String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  post        Post         @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([postId, createdAt])
+  @@index([userId])
+}
+
+model WeeklyGoal {
+  id          Int          @id @default(autoincrement())
+  userId      Int
+  weekStart   DateTime
+  targetKm    Float
+  achievedKm  Float        @default(0)
+  updatedAt   DateTime     @updatedAt
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, weekStart])
+  @@index([userId])
+}
+
+model Notification {
+  id          Int              @id @default(autoincrement())
+  userId      Int
+  type        NotificationType
+  payload     Json
+  isRead      Boolean          @default(false)
+  createdAt   DateTime         @default(now())
+
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead, createdAt])
+}
+
+model RouteSuggestion {
+  id                Int       @id @default(autoincrement())
+  runId             Int
+  requestedByUserId Int?
+  suggestionGeojson Json?
+  rationale         String
+  generatedAt       DateTime  @default(now())
+
+  run               Run       @relation(fields: [runId], references: [id], onDelete: Cascade)
+  requestedBy       User?     @relation("RouteSuggestionRequestedBy", fields: [requestedByUserId], references: [id], onDelete: SetNull)
+
+  @@index([runId, generatedAt])
+  @@index([requestedByUserId])
+}
+
+model WeeklyReport {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  weekStart   DateTime
+  summary     Json
+  generatedAt DateTime  @default(now())
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, weekStart])
+}
+
+model RefreshToken {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  tokenHash   String    @unique
+  expiresAt   DateTime
+  revokedAt   DateTime?
+  createdAt   DateTime  @default(now())
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt])
+}
