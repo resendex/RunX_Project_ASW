@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { feedService } from '../services/feed.service';
-import { addReactionSchema } from '../schemas';
+import { addReactionSchema } from '../schemas/reaction.schema';
 
 /**
  * @swagger
