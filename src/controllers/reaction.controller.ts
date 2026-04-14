@@ -20,7 +20,7 @@ export const addReaction = async (req: Request, res: Response): Promise<void> =>
   try {
     const reaction = await feedService.addReaction(
       Number(req.params.id),
-      req.user!.userId,
+      req.auth!.userId,
       result.data.emoji
     );
     res.status(201).json(reaction);
@@ -47,7 +47,7 @@ export const removeReaction = async (req: Request, res: Response): Promise<void>
   try {
     await feedService.removeReaction(
       Number(req.params.id),
-      req.user!.userId,
+      req.auth!.userId,
       result.data.emoji
     );
     res.status(204).send();
