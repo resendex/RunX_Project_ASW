@@ -18,7 +18,7 @@ export const createPost = async (req: Request, res: Response): Promise<void> => 
   }
 
   try {
-    const post = await feedService.createPost(req.user!.userId, result.data);
+    const post = await feedService.createPost(req.auth!.userId, result.data);
     res.status(201).json(post);
   } catch (err: unknown) {
     res.status(500).json({ error: (err as Error).message });
