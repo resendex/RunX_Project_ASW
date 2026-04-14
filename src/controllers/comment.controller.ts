@@ -20,7 +20,7 @@ export const addComment = async (req: Request, res: Response): Promise<void> => 
   try {
     const comment = await feedService.addComment(
       Number(req.params.id),
-      req.user!.userId,
+      req.auth!.userId,
       result.data.content
     );
     res.status(201).json(comment);
