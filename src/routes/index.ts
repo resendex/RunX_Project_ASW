@@ -16,7 +16,7 @@ router.use("/auth", authRoutes);
 router.use("/users", userRoutes);
 router.use('/feed', feedRoutes);
 router.use('/posts', postRoutes);
-router.use('/posts', reactionRoutes);
-router.use('/posts', commentRoutes);
+router.use('/reactions', reactionRoutes);
+router.use('/comments', commentRoutes);
 
 export default router;
