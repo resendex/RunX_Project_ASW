@@ -50,7 +50,7 @@ export const getPost = async (req: Request, res: Response): Promise<void> => {
  */
 export const deletePost = async (req: Request, res: Response): Promise<void> => {
   try {
-    await feedService.deletePost(Number(req.params.id), req.user!.userId);
+    await feedService.deletePost(Number(req.params.id), req.auth!.userId);
     res.status(204).send();
   } catch (err: unknown) {
     const status = (err as Error).message.includes('permissão') ? 403 : 404;
