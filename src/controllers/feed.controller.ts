@@ -13,7 +13,7 @@ export const getFeed = async (req: Request, res: Response): Promise<void> => {
   const limit = Math.min(Number(req.query.limit) || 10, 50);
 
   try {
-    const result = await feedService.getFeed(req.user!.userId, page, limit);
+    const result = await feedService.getFeed(req.auth!.userId, page, limit);
     res.json(result);
   } catch (err: unknown) {
     res.status(500).json({ error: (err as Error).message });
