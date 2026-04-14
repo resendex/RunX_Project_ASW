@@ -1,13 +1,16 @@
 import { z } from 'zod';
-
 /**
- * Schema para adicionar/remover reação
+ * Schema para adicionar reação.
+ * Usa o enum ReactionType do Prisma: LIKE | LOVE | CLAP | FIRE
  */
 export const addReactionSchema = z.object({
-  emoji: z
-    .string()
-    .min(1, 'Emoji é obrigatório')
-    .max(10, 'Emoji inválido'),
+  type: z
+    .enum(['LIKE', 'LOVE', 'CLAP', 'FIRE'], {
+      errorMap: () => ({
+        message: 'Tipo de reação inválido. Valores permitidos: LIKE, LOVE, CLAP, FIRE',
+      }),
+    })
+    .default('LIKE'),
 });
 
 export type AddReactionInput = z.infer<typeof addReactionSchema>;
