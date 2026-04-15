@@ -1,7 +1,5 @@
 import { z } from "zod";
 
-// ─── Theme ───────────────────────────────────────────────────────────────────
-
 export const createThemeSchema = z.object({
   name: z.string().min(1, "Nome obrigatório").max(50, "Nome demasiado longo"),
   emoji: z.string().max(10).optional().nullable(),
@@ -14,8 +12,6 @@ export const createThemeSchema = z.object({
 
 export type CreateThemeBody = z.infer<typeof createThemeSchema>;
 
-// ─── WeeklyGoal ──────────────────────────────────────────────────────────────
-
 export const upsertWeeklyGoalSchema = z.object({
   weekStart: z.string().datetime({ message: "Data inválida. Usa formato ISO 8601." }),
   targetKm: z
@@ -26,7 +22,6 @@ export const upsertWeeklyGoalSchema = z.object({
 
 export type UpsertWeeklyGoalBody = z.infer<typeof upsertWeeklyGoalSchema>;
 
-// ─── Run ─────────────────────────────────────────────────────────────────────
 
 export const createRunSchema = z.object({
   startedAt: z.string().datetime({ message: "startedAt inválido. Usa ISO 8601." }),
