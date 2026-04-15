@@ -13,7 +13,7 @@ export const addComment = async (req: Request, res: Response): Promise<void> => 
   const result = addCommentSchema.safeParse(req.body);
 
   if (!result.success) {
-    res.status(400).json({ error: 'Dados inválidos', details: result.error.errors });
+    res.status(400).json({ error: 'Dados inválidos', details: result.error.issues });
     return;
   }
 

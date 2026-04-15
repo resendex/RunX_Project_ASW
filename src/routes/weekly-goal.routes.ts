@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { weeklyGoalController } from "../controllers/weekly-goal.controller";
 import { authenticate } from "../middlewares/auth.middleware";
+import { validate } from "../middlewares/validate.middleware";
+import { runIdParamSchema, upsertWeeklyGoalSchema } from "../schemas/run.schema";
 
 const router = Router();
 
@@ -14,9 +16,9 @@ router.get("/", weeklyGoalController.list);
 router.get("/current", weeklyGoalController.getCurrent);
 
 // PUT /weekly-goals — criar ou atualizar meta (upsert)
-router.put("/", weeklyGoalController.upsert);
+router.put("/", validate({ body: upsertWeeklyGoalSchema }), weeklyGoalController.upsert);
 
 // DELETE /weekly-goals/:id — eliminar meta
-router.delete("/:id", weeklyGoalController.delete);
+router.delete("/:id", validate({ params: runIdParamSchema }), weeklyGoalController.delete);
 
 export default router;

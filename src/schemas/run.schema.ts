@@ -15,7 +15,7 @@ export type CreateThemeBody = z.infer<typeof createThemeSchema>;
 export const upsertWeeklyGoalSchema = z.object({
   weekStart: z.string().datetime({ message: "Data inválida. Usa formato ISO 8601." }),
   targetKm: z
-    .number({ invalid_type_error: "targetKm deve ser número" })
+    .number()
     .positive("targetKm deve ser positivo")
     .max(500, "targetKm demasiado elevado"),
 });
@@ -27,35 +27,35 @@ export const createRunSchema = z.object({
   startedAt: z.string().datetime({ message: "startedAt inválido. Usa ISO 8601." }),
   endedAt: z.string().datetime({ message: "endedAt inválido. Usa ISO 8601." }),
   distanceKm: z
-    .number({ invalid_type_error: "distanceKm deve ser número" })
+    .number()
     .positive("distanceKm deve ser positivo")
     .max(300, "distanceKm demasiado elevado"),
   durationSec: z
-    .number({ invalid_type_error: "durationSec deve ser inteiro" })
+    .number()
     .int()
     .positive("durationSec deve ser positivo"),
   avgPace: z
-    .number({ invalid_type_error: "avgPace deve ser número" })
+    .number()
     .positive()
     .optional()
     .nullable(),
   calories: z
-    .number({ invalid_type_error: "calories deve ser inteiro" })
+    .number()
     .int()
     .nonnegative()
     .optional()
     .nullable(),
-  routeGeojson: z.record(z.unknown()).optional().nullable(),
+  routeGeojson: z.record(z.string(), z.unknown()).optional().nullable(),
   photoUrl: z.string().url("photoUrl inválido").optional().nullable(),
   observations: z.string().max(1000).optional().nullable(),
   motivationalPhrase: z.string().max(300).optional().nullable(),
   themeId: z
-    .number({ invalid_type_error: "themeId deve ser inteiro" })
+    .number()
     .int()
     .positive()
     .optional()
     .nullable(),
-  weatherData: z.record(z.unknown()).optional().nullable(),
+  weatherData: z.record(z.string(), z.unknown()).optional().nullable(),
 });
 
 export type CreateRunBody = z.infer<typeof createRunSchema>;
@@ -65,7 +65,7 @@ export const updateRunSchema = z.object({
   motivationalPhrase: z.string().max(300).optional().nullable(),
   photoUrl: z.string().url("photoUrl inválido").optional().nullable(),
   themeId: z
-    .number({ invalid_type_error: "themeId deve ser inteiro" })
+    .number()
     .int()
     .positive()
     .optional()

@@ -1,11 +1,14 @@
 import { z } from 'zod';
 
+const postVisibilitySchema = z.enum(['PUBLIC', 'GROUP', 'PRIVATE']);
+
 /**
  * Schema para criação de publicação
  */
 export const createPostSchema = z.object({
   content: z
     .string()
+    .trim()
     .max(2000, 'Publicação não pode ter mais de 2000 caracteres')
     .optional(),
 
@@ -22,18 +25,14 @@ export const createPostSchema = z.object({
     .optional(),
 
   visibility: z
-    .enum(['PUBLIC', 'GROUP', 'PRIVATE'], {
-      errorMap: () => ({
-        message: 'Visibilidade inválida. Valores permitidos: PUBLIC, GROUP, PRIVATE',
-      }),
-    })
+    .enum(['PUBLIC', 'GROUP', 'PRIVATE'])
     .default('PUBLIC'),
 
   isAnonymous: z
-    .boolean({ invalid_type_error: 'isAnonymous deve ser booleano' })
+    .boolean()
     .default(false),
 }).refine(
-  (data) => data.content || data.runId || data.groupEventId,
+  (data) => Boolean(data.content || data.runId || data.groupEventId),
   {
     message: 'A publicação deve ter conteúdo, corrida ou evento associado',
   }
@@ -45,12 +44,11 @@ export const createPostSchema = z.object({
 export const updatePostSchema = z.object({
   content: z
     .string()
+    .trim()
     .max(2000, 'Publicação não pode ter mais de 2000 caracteres')
     .optional(),
 
-  visibility: z
-    .enum(['PUBLIC', 'GROUP', 'PRIVATE'])
-    .optional(),
+  visibility: postVisibilitySchema.optional(),
 });
 
 export type CreatePostInput = z.infer<typeof createPostSchema>;

@@ -1,4 +1,5 @@
 import { prisma } from "../config/prisma";
+import { Prisma } from "@prisma/client";
 import type { CreateRunBody, UpdateRunBody } from "../schemas/run.schema";
 
 export interface RunFilters {
@@ -80,12 +81,22 @@ export const runModel = {
         durationSec: data.durationSec,
         avgPace: data.avgPace ?? null,
         calories: data.calories ?? null,
-        routeGeojson: data.routeGeojson ?? undefined,
+        routeGeojson:
+          data.routeGeojson === undefined
+            ? undefined
+            : data.routeGeojson === null
+              ? Prisma.JsonNull
+              : (data.routeGeojson as Prisma.InputJsonValue),
         photoUrl: data.photoUrl ?? null,
         observations: data.observations ?? null,
         motivationalPhrase: data.motivationalPhrase ?? null,
         themeId: data.themeId ?? null,
-        weatherData: data.weatherData ?? undefined,
+        weatherData:
+          data.weatherData === undefined
+            ? undefined
+            : data.weatherData === null
+              ? Prisma.JsonNull
+              : (data.weatherData as Prisma.InputJsonValue),
       },
       include: runInclude,
     });

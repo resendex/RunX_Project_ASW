@@ -9,6 +9,7 @@ import notificationRoutes from './notification.routes';
 import runRoutes        from "./run.routes";
 import themeRoutes      from "./theme.routes";
 import weeklyGoalRoutes from "./weekly-goal.routes";
+import groupRoutes      from "./group.routes";
 
 const router = Router();
 
@@ -26,5 +27,6 @@ router.use('/notifications', notificationRoutes);
 router.use("/runs",         runRoutes);
 router.use("/themes",       themeRoutes);
 router.use("/weekly-goals", weeklyGoalRoutes);
+router.use("/groups",       groupRoutes);
 
 export default router;

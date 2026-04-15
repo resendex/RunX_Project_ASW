@@ -13,7 +13,7 @@ export const addReaction = async (req: Request, res: Response): Promise<void> =>
   const result = addReactionSchema.safeParse(req.body);
 
   if (!result.success) {
-    res.status(400).json({ error: 'Dados inválidos', details: result.error.errors });
+    res.status(400).json({ error: 'Dados inválidos', details: result.error.issues });
     return;
   }
 
@@ -37,18 +37,10 @@ export const addReaction = async (req: Request, res: Response): Promise<void> =>
  *     summary: Remover reação
  */
 export const removeReaction = async (req: Request, res: Response): Promise<void> => {
-  const result = addReactionSchema.safeParse(req.body);
-
-  if (!result.success) {
-    res.status(400).json({ error: 'Dados inválidos', details: result.error.errors });
-    return;
-  }
-
   try {
     await feedService.removeReaction(
       Number(req.params.id),
-      req.auth!.userId,
-      result.data.type
+      req.auth!.userId
     );
     res.status(204).send();
   } catch (err: unknown) {

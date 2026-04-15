@@ -5,11 +5,7 @@ import { z } from 'zod';
  */
 export const addReactionSchema = z.object({
   type: z
-    .enum(['LIKE', 'LOVE', 'CLAP', 'FIRE'], {
-      errorMap: () => ({
-        message: 'Tipo de reação inválido. Valores permitidos: LIKE, LOVE, CLAP, FIRE',
-      }),
-    })
+    .enum(['LIKE', 'LOVE', 'CLAP', 'FIRE'])
     .default('LIKE'),
 });
 

@@ -1,0 +1,130 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[portuguese]{babel}
+\usepackage{geometry}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{tabularx}
+\geometry{margin=2.5cm}
+
+\title{RunX -- Relatorio Final Fase 2}
+\author{ASW 2025/2026 -- Grupo 16}
+\date{15 de abril de 2026}
+
+\begin{document}
+\maketitle
+
+\section*{1. Enquadramento evolutivo (Checkpoint 1 $\rightarrow$ Checkpoint 2)}
+
+Este documento e evolutivo em relacao ao checkpoint anterior. Mantem a base de especificacao da fase 1 e descreve a sua concretizacao tecnica no backend da fase 2.
+
+\section*{2. Reflexao por secao do documento base}
+
+\subsection*{2.1 Enquadramento}
+O problema e os objetivos iniciais mantiveram-se estaveis. A evolucao principal foi transformar a proposta funcional numa API real com persistencia e regras de negocio.
+
+\subsection*{2.2 Utilizadores e cenarios}
+Os papeis Runner e Organizer foram implementados com autorizacao no dominio, sobretudo em grupos e eventos. A experiencia mostrou a importancia de explicitar regras de permissao em servico e nao apenas em controlador.
+
+\subsection*{2.3 Storyboards e fluxos}
+Os fluxos de interface foram usados como fonte para contratos HTTP e para o desenho dos endpoints. Nesta fase, a prioridade foi consistencia de request/response e nao detalhe visual.
+
+\subsection*{2.4 Requisitos funcionais}
+Os modulos principais ficaram operacionais (auth, users, runs, feed, weekly goals, groups). O reforco mais relevante foi adotar validacao Zod para body, params e query.
+
+\subsection*{2.5 Requisitos nao funcionais}
+A arquitetura em camadas e o tratamento centralizado de erro ficaram consolidados. A documentacao OpenAPI foi expandida para todos os endpoints implementados.
+
+\subsection*{2.6 Modelo de dados e API}
+O esquema Prisma foi estendido para entidades sociais e colaborativas e alinhado com a API REST documentada no Swagger.
+
+\section*{3. Entregas tecnicas concluidas}
+
+\begin{itemize}
+  \item Arquitetura backend em camadas (routes, controllers, services, models, schemas, middlewares).
+  \item Persistencia com Prisma ORM e PostgreSQL.
+  \item Autenticacao JWT com refresh token.
+  \item Modulos de Auth, Users, Runs, Themes, Weekly Goals, Feed e Groups.
+  \item Validacao de entradas com Zod em body, params e query.
+  \item Documentacao Swagger para todos os endpoints implementados na fase 2.
+\end{itemize}
+
+\section*{4. Escopo de integracoes externas}
+
+Nesta fase, integracoes externas (meteorologia em tempo real e sugestao inteligente de rotas) nao sao obrigatorias para a avaliacao funcional base.
+
+Estado atual:
+
+\begin{itemize}
+  \item Endpoint de sugestao de rota existe em modo \textit{stub}.
+  \item Integracao de meteorologia esta preparada e opcional.
+\end{itemize}
+
+\section*{5. Evidencias de validacao}
+
+Foram preparados guioes de testes:
+
+\begin{itemize}
+  \item \texttt{docs/auth-tests.md}
+  \item \texttt{docs/groups-tests.md}
+\end{itemize}
+
+Estado tecnico atual:
+
+\begin{itemize}
+  \item Build TypeScript validado com sucesso (\texttt{npm run build}).
+  \item API operacional em modo desenvolvimento (\texttt{npm run dev}).
+\end{itemize}
+
+\section*{6. Anexo de cumprimento (estimativas)}
+
+\subsection*{6.1 Requisitos gerais}
+
+\begin{tabularx}{\textwidth}{|l|c|X|}
+\hline
+\textbf{Categoria} & \textbf{Cumprimento} & \textbf{Evidencia} \\
+\hline
+Arquitetura backend em camadas & 100\% & Estrutura modular aplicada aos fluxos principais da API. \\
+\hline
+Persistencia relacional & 100\% & Prisma + PostgreSQL com migracoes e entidades de dominio. \\
+\hline
+Validacao rigorosa de input & 95\% & Zod aplicado em body/params/query nas rotas principais. \\
+\hline
+Documentacao de API & 100\% & OpenAPI/Swagger completo para endpoints implementados. \\
+\hline
+\end{tabularx}
+
+\subsection*{6.2 Requisitos especificos por fase}
+
+\begin{tabularx}{\textwidth}{|l|c|X|}
+\hline
+\textbf{Fase} & \textbf{Cumprimento} & \textbf{Justificacao} \\
+\hline
+Fase 1 (Especificacao) & 100\% & Documento base completo e preservado como referencia evolutiva. \\
+\hline
+Fase 2 (Backend) & 95\% & API funcional, compilavel, validada e documentada. \\
+\hline
+Fase 3 (Frontend + IA) & 30\% & Contratos e stubs preparados; integracao final ainda pendente. \\
+\hline
+Fase 4 (Entrega final) & 10\% & Preparacao documental e tecnica inicial. \\
+\hline
+\end{tabularx}
+
+\section*{7. Ajustes finais de documentacao}
+
+\begin{itemize}
+  \item README consolidado com setup, endpoints e estado da fase.
+  \item Relatorio final consolidado (Markdown e TeX).
+  \item Guia de testes para grupos e eventos.
+\end{itemize}
+
+\section*{8. Proximos passos}
+
+\begin{itemize}
+  \item Integrar funcionalidades IA previstas para fases seguintes.
+  \item Cobrir endpoints com testes automatizados.
+  \item Alinhar frontend com os contratos finais do backend.
+\end{itemize}
+
+\end{document}
