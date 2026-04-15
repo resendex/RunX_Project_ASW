@@ -101,7 +101,27 @@ User autenticado:
 - `PUT /users/me`
 - `DELETE /users/me`
 - `POST /users/me/avatar`
-
+Runs:
+- `POST /runs`
+- `GET /runs`
+- `GET /runs/:id`
+- `PUT /runs/:id`
+- `DELETE /runs/:id`
+- `GET /runs/week`
+Feed:
+- `GET /feed`
+Post:
+-`POST /posts`
+-`GET /posts/:id`
+-`DELETE /posts/:id`
+Reações:
+-`POST /posts/:id/reactions`
+-`DELETE /posts/:id/reactions`
+Comentarios:
+-`POST /posts/:id/comments`
+-`DELETE /comments/:id`
+Notificações:
+-`GET /notifications`
 ## Testes de autenticacao
 
 Existe um guiao de testes manuais em:
