@@ -1,4 +1,4 @@
-import { prisma } from "../lib/prisma";
+import { prisma } from "../config/prisma";
 import type { CreateRunBody, UpdateRunBody } from "../schemas/run.schema";
 
 export interface RunFilters {
