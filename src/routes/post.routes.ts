@@ -4,8 +4,8 @@ import { authenticate } from '../middlewares/auth.middleware';
 
 const router = Router();
 
-router.post('/', authMiddleware, createPost);
-router.get('/:id', authMiddleware, getPost);
-router.delete('/:id', authMiddleware, deletePost);
+router.post('/', authenticate, createPost);
+router.get('/:id', authenticate, getPost);
+router.delete('/:id', authenticate, deletePost);
 
 export default router;
