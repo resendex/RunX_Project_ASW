@@ -1,4 +1,4 @@
-import { prisma } from "../lib/prisma";
+import { prisma } from "../config/prisma";
 
 export const weeklyGoalModel = {
   async findByUserAndWeek(userId: number, weekStart: Date) {
