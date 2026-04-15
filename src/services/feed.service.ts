@@ -1,15 +1,16 @@
 import * as postService from './post.service';
 import * as reactionService from './reaction.service';
 import * as commentService from './comment.service';
+export const feedService = {
+  getFeed: postService.getFeed,
 
-export const getFeed = postService.getFeed;
+  createPost: postService.createPost,
+  getPostById: postService.getPostById,
+  deletePost: postService.deletePost,
 
-export const createPost = postService.createPost;
-export const getPostById = postService.getPostById;
-export const deletePost = postService.deletePost;
+  addReaction: reactionService.addReaction,
+  removeReaction: reactionService.removeReaction,
 
-export const addReaction = reactionService.addReaction;
-export const removeReaction = reactionService.removeReaction;
-
-export const addComment = commentService.addComment;
-export const deleteComment = commentService.deleteComment;
+  addComment: commentService.addComment,
+  deleteComment: commentService.deleteComment,
+};
