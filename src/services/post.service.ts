@@ -12,7 +12,49 @@ const postInclude = {
     select: { reactions: true, comments: true },
   },
 };
+export const getFeed = async (userId: number, page: number, limit: number) => {
+  const skip = (page - 1) * limit;
 
+  const groupIds = (
+    await prisma.groupMember.findMany({
+      where: { userId },
+      select: { groupId: true },
+    })
+  ).map((gm) => gm.groupId);
+
+  const [posts, total] = await Promise.all([
+    prisma.post.findMany({
+      where: {
+        OR: [
+          { visibility: 'PUBLIC' },
+          { visibility: 'GROUP', groupId: { in: groupIds } },
+          { authorId: userId },
+        ],
+      },
+      include: postInclude,
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: limit,
+    }),
+    prisma.post.count({
+      where: {
+        OR: [
+          { visibility: 'PUBLIC' },
+          { visibility: 'GROUP', groupId: { in: groupIds } },
+          { authorId: userId },
+        ],
+      },
+    }),
+  ]);
+
+  return {
+    posts,
+    page,
+    limit,
+    total,
+    totalPages: Math.ceil(total / limit),
+  };
+};
 export const createPost = async (userId: number, data: CreatePostInput) => {
   return prisma.post.create({
     data: {
