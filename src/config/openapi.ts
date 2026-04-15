@@ -1,4 +1,6 @@
 import { env } from "./env";
+import { runSchemas, runPaths } from "./openapi.runs";
+
 
 export const openApiDoc = {
   openapi: "3.0.3",
@@ -11,7 +13,10 @@ export const openApiDoc = {
   tags: [
     { name: "System", description: "Estado geral da API" },
     { name: "Auth", description: "Autenticacao e sessao" },
-    { name: "Users", description: "Perfil do utilizador autenticado" }
+    { name: "Users", description: "Perfil do utilizador autenticado" },
+    { name: "Runs",        description: "Gestão de corridas" },
+    { name: "Themes",      description: "Temas disponíveis" },
+    { name: "WeeklyGoals", description: "Metas semanais do utilizador" }
   ],
   components: {
     securitySchemes: {
