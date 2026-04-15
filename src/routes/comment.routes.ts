@@ -4,7 +4,7 @@ import { authenticate } from '../middlewares/auth.middleware';
 
 const router = Router();
 
-router.post('/:id/comments', authMiddleware, addComment);
-router.delete('/comments/:id', authMiddleware, deleteComment);
+router.post('/:id/comments', authenticate, addComment);
+router.delete('/comments/:id', authenticate, deleteComment);
 
 export default router;
