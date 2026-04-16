@@ -1,0 +1,220 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[portuguese]{babel}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{titlesec}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue,
+  pdftitle={RunX Fase 2 - Guia de Apresentacao},
+  pdfauthor={Grupo 16}
+}
+
+\setlist[itemize]{topsep=2pt,itemsep=2pt,parsep=0pt}
+\setlist[enumerate]{topsep=2pt,itemsep=2pt,parsep=0pt}
+\setlength{\parskip}{6pt}
+\setlength{\parindent}{0pt}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+
+\begin{document}
+
+{\LARGE \textbf{RunX Fase 2}}\\[4pt]
+{\large Guia de apresentacao oral e funcional para demonstracao ao professor}\\[10pt]
+\textbf{Projeto:} Backend Node.js + Express + Prisma + PostgreSQL\\
+\textbf{Data:} 16/04/2026
+
+\vspace{8pt}
+\hrule
+\vspace{8pt}
+
+\section{Objetivo da demonstracao}
+
+Mostrar que o backend esta \textbf{a funcionar fim a fim}, com:
+
+\begin{itemize}
+  \item autenticacao JWT;
+  \item gestao de corridas, metas semanais e feed social;
+  \item grupos e eventos (funcionalidade-chave da fase 2);
+  \item validacao de dados e tratamento de erros;
+  \item documentacao via Swagger.
+\end{itemize}
+
+\textbf{Mensagem principal para abrir a apresentacao:}
+
+\textit{"Nesta fase entregamos um backend completo, com arquitetura por camadas, persistencia em PostgreSQL via Prisma, autenticacao segura e modulos sociais e de grupos operacionais."}
+
+\section{Checklist antes da aula (10-15 min)}
+
+\subsection{Checklist tecnico}
+
+\begin{enumerate}
+  \item Confirmar Node.js e npm instalados.
+  \item Confirmar PostgreSQL ativo.
+  \item Confirmar ficheiro \texttt{.env} presente e valido.
+  \item Confirmar compilacao sem erros.
+  \item Confirmar API a responder em \texttt{/health}.
+\end{enumerate}
+
+\subsection{Comandos de preparacao}
+
+Executar na raiz do projeto:
+
+\begin{verbatim}
+npm install
+npm run prisma:generate
+npm run prisma:migrate
+npm run build
+PORT=3001 npm run dev
+\end{verbatim}
+
+\textbf{Nota importante:} usar porta \texttt{3001} evita conflitos caso o \texttt{3000} esteja ocupado por outro projeto local.
+
+Teste rapido:
+
+\begin{verbatim}
+curl http://localhost:3001/health
+\end{verbatim}
+
+Esperado:
+
+\begin{verbatim}
+{"ok":true,"service":"runx-fase2-api"}
+\end{verbatim}
+
+\section{Roteiro de demo ao vivo (12 minutos)}
+
+\begin{longtable}{|p{0.11\textwidth}|p{0.39\textwidth}|p{0.43\textwidth}|}
+\hline
+\textbf{Tempo} & \textbf{Acao funcional} & \textbf{Fala sugerida (guiao oral)} \\
+\hline
+0:00--1:00 & Mostrar contexto no README e stack do projeto. & "O backend foi organizado por camadas: rotas, controllers, services, models e schemas de validacao." \\
+\hline
+1:00--2:00 & Abrir \texttt{/health} e \texttt{/api-docs}. & "Aqui validamos rapidamente disponibilidade da API e documentacao interativa." \\
+\hline
+2:00--4:00 & Executar \texttt{/auth/register}, \texttt{/auth/login}, \texttt{/users/me}. & "A autenticacao usa JWT e os endpoints protegidos exigem Bearer token." \\
+\hline
+4:00--6:00 & Mostrar \texttt{/themes}, criar corrida em \texttt{/runs}, listar em \texttt{/runs}. & "As corridas ficam persistidas em PostgreSQL via Prisma, com validacoes de entrada." \\
+\hline
+6:00--7:00 & Mostrar \texttt{/weekly-goals/current} e \texttt{PUT /weekly-goals}. & "Acompanham-se metas por semana e o progresso e recalculado com base nas corridas." \\
+\hline
+7:00--8:30 & Mostrar \texttt{/posts}, \texttt{/feed}, reacoes e comentarios. & "Temos o modulo social completo: publicacoes, reacoes e comentarios." \\
+\hline
+8:30--10:30 & Criar grupo, criar evento, entrar no evento. & "Este e o destaque da fase 2: grupos, gestao de membros e eventos com participacao." \\
+\hline
+10:30--11:30 & Enviar pedido invalido para forcar erro 400. & "A API valida dados com Zod e devolve erros consistentes e explicitos." \\
+\hline
+11:30--12:00 & Fecho + referir relatorio PDF. & "Concluimos os objetivos da fase 2 e deixamos pontos de extensao para fases seguintes." \\
+\hline
+\end{longtable}
+
+\section{Passos funcionais detalhados (Swagger ou curl)}
+
+\subsection{1) Autenticacao}
+
+\begin{verbatim}
+POST /auth/register
+POST /auth/login
+GET  /users/me
+\end{verbatim}
+
+Guardar \texttt{accessToken} para os passos seguintes.
+
+\subsection{2) Corridas e progresso semanal}
+
+\begin{verbatim}
+GET  /themes
+POST /runs
+GET  /runs
+GET  /runs/week
+\end{verbatim}
+
+\subsection{3) Metas semanais}
+
+\begin{verbatim}
+PUT /weekly-goals
+GET /weekly-goals/current
+\end{verbatim}
+
+\subsection{4) Feed social}
+
+\begin{verbatim}
+POST /posts
+POST /posts/{id}/reactions
+POST /posts/{id}/comments
+GET  /feed
+\end{verbatim}
+
+\subsection{5) Grupos e eventos (fase 2)}
+
+\begin{verbatim}
+POST /groups
+POST /groups/{id}/events
+POST /groups/{id}/events/{eid}/join
+GET  /groups/{id}/events
+\end{verbatim}
+
+\section{Plano B (se houver problemas durante a demo)}
+
+\subsection{Porta ocupada}
+
+Se a API nao arrancar no 3000:
+
+\begin{verbatim}
+PORT=3001 npm run dev
+\end{verbatim}
+
+\subsection{Erro de base de dados}
+
+\begin{verbatim}
+npm run prisma:generate
+npm run prisma:migrate
+\end{verbatim}
+
+E confirmar \texttt{DATABASE\_URL} no \texttt{.env}.
+
+\subsection{Token expirado}
+
+Executar novo login e repetir pedidos com novo \texttt{accessToken}.
+
+\subsection{Sem internet para APIs externas}
+
+Nao bloqueia a demonstracao: integracoes externas desta fase estao opcionais/stub.
+
+\section{Perguntas provaveis do professor (respostas curtas)}
+
+\textbf{Porque nao existe homepage em / ?}\\
+A API e orientada a recursos; as rotas publicas principais sao \texttt{/health} e \texttt{/api-docs}. Caminhos nao definidos devolvem 404 controlado.
+
+\textbf{Como garantem qualidade dos dados?}\\
+Validacao com Zod nos schemas, middlewares de validacao e codigos de erro consistentes.
+
+\textbf{O que ficou para extensao futura?}\\
+Sugestao de rota por IA e integracoes mais avancadas, mantendo endpoint e estrutura preparados.
+
+\textbf{Como empacotaram a entrega?}\\
+ZIP final sem \texttt{node\_modules} nem \texttt{.git}, incluindo codigo-fonte e ficheiros obrigatorios (incluindo \texttt{.env}).
+
+\section{Fecho recomendado (30 segundos)}
+
+\textit{"Concluimos os objetivos da fase 2 com backend funcional, persistente e documentado. A demonstracao mostrou autenticacao, corridas, metas, feed e grupos/eventos em funcionamento, com validacao robusta e estrutura pronta para evolucao."}
+
+\vfill
+\textbf{Links de demonstracao:}\
+\begin{itemize}
+  \item API: \url{http://localhost:3001}
+  \item Health: \url{http://localhost:3001/health}
+  \item Swagger: \url{http://localhost:3001/api-docs}
+\end{itemize}
+
+\end{document}
