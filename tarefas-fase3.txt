@@ -1,3 +1,0 @@
-Integração externa no projeto. Desenvolvimento de uma funcionalidade do projeto baseada no consumo de um serviço externo. Definição do papel do serviço externo no sistema e implementação da integração no backend.
-Funcionalidade inteligente do projeto. Desenvolvimento de uma funcionalidade do projeto suportada por LLM, integrada no backend existente. Definição do papel do serviço inteligente no sistema e implementação de um endpoint que encapsula essa capacidade.
-Integração frontend principal. Desenvolvimento da interface principal do projeto como consumidor da API existente. Implementação dos fluxos centrais do sistema no cliente e verificação do funcionamento end-to-end.
